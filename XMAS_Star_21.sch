@@ -489,8 +489,6 @@ Text GLabel 8000 5500 2    50   Input ~ 0
 PairYZ1
 Text GLabel 8000 5400 2    50   Input ~ 0
 PairZX0
-Wire Wire Line
-	8520 6100 7500 6100
 $Comp
 L Device:LED_ALT D19
 U 1 1 5FE4DBB0
@@ -1000,32 +998,6 @@ Wire Wire Line
 	6800 6100 6800 5800
 Text GLabel 6800 5800 0    50   Input ~ 0
 SR_Reset_
-Wire Wire Line
-	9100 5300 8520 5300
-Wire Wire Line
-	8520 5300 8520 6100
-$Comp
-L XMAS_Star_21-rescue:NPIC6C596A-UserLibray U2
-U 1 1 5FEFC660
-P 7400 5550
-F 0 "U2" H 7400 5570 50  0000 C CNN
-F 1 "NPIC6C596A" H 7400 5510 50  0000 C CNN
-F 2 "UserFootprints:DHVQFN-16_EP_3.6x2.6_Pitch0.5mm" H 7400 5500 50  0001 C CNN
-F 3 "" H 7400 5500 50  0001 C CNN
-	1    7400 5550
-	1    0    0    -1  
-$EndComp
-$Comp
-L XMAS_Star_21-rescue:NPIC6C596A-UserLibray U3
-U 1 1 5FEFD285
-P 9700 5550
-F 0 "U3" H 9700 5580 50  0000 C CNN
-F 1 "NPIC6C596A" H 9700 5520 50  0000 C CNN
-F 2 "UserFootprints:DHVQFN-16_EP_3.6x2.6_Pitch0.5mm" H 9700 5500 50  0001 C CNN
-F 3 "" H 9700 5500 50  0001 C CNN
-	1    9700 5550
-	1    0    0    -1  
-$EndComp
 Text GLabel 8000 5300 2    50   Input ~ 0
 SR_CLK
 Text GLabel 10300 5300 2    50   Input ~ 0

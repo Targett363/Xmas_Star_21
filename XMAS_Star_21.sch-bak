@@ -1681,4 +1681,5 @@ Text GLabel 9100 4900 0    50   Input ~ 0
 RSTN
 NoConn ~ 7350 3850
 NoConn ~ 7350 3750
+NoConn ~ -1250 3250
 $EndSCHEMATC

@@ -851,7 +851,7 @@ Text GLabel 5050 2500 2    50   Input ~ 0
 SPairXY1
 Text GLabel 5050 3300 2    50   Input ~ 0
 SPairYZ0
-Text GLabel 5060 4100 2    50   Input ~ 0
+Text GLabel 5050 4100 2    50   Input ~ 0
 SPairYZ1
 Text GLabel 5050 4900 2    50   Input ~ 0
 SPairZX0

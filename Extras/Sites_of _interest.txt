@@ -1,0 +1,6 @@
+https://github.com/SpenceKonde/megaTinyCore/tree/master/megaavr/extras
+
+https://www.tindie.com/products/drazzy/attiny32171607-dev-board-arduino-compatible/
+
+https://mansfield-devine.com/speculatrix/2017/02/an-introduction-to-avr-registers-and-macros/
+

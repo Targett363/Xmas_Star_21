@@ -919,7 +919,7 @@ UPDI
 Text Notes 5840 1740 0    50   ~ 0
 ATTINY1607 family of micros have a core located at:\nhttps://github.com/SpenceKonde/megaTinyCore\n
 $Comp
-L X19:TP4056X-UserLibray U4
+L XMAS_Star_21-rescue:TP4056X-UserLibray-X19 U4
 U 1 1 5FEBB245
 P 9600 1200
 F 0 "U4" H 9600 1705 50  0000 C CNN
@@ -941,7 +941,7 @@ F 3 "" H 9600 1650 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L Connector:USB_B_Micro J1
+L XMAS_Star_21-rescue:USB_B_Micro-Connector J1
 U 1 1 5FEBC775
 P 6150 1100
 F 0 "J1" H 6207 1567 50  0000 C CNN
@@ -1391,44 +1391,30 @@ Wire Wire Line
 	6750 2100 6750 2250
 Connection ~ 6750 2100
 NoConn ~ 6450 1100
-$Comp
-L Connector_Generic:Conn_02x03_Odd_Even J3
-U 1 1 5FEEF18B
-P 7650 2100
-F 0 "J3" H 7700 2417 50  0000 C CNN
-F 1 "Conn_02x03_Odd_Even" H 7700 2326 50  0000 C CNN
-F 2 "Connector_PinSocket_2.54mm:PinSocket_2x03_P2.54mm_Vertical_SMD" H 7650 2100 50  0001 C CNN
-F 3 "~" H 7650 2100 50  0001 C CNN
-	1    7650 2100
-	1    0    0    -1  
-$EndComp
-Text GLabel 7450 2000 0    50   Input ~ 0
+Text GLabel 7750 1880 0    50   Input ~ 0
 UPDI
 $Comp
 L power:+3.3V #PWR0111
 U 1 1 5FEF05EB
-P 7950 2000
-F 0 "#PWR0111" H 7950 1850 50  0001 C CNN
-F 1 "+3.3V" H 7970 2180 50  0000 C CNN
-F 2 "" H 7950 2000 50  0001 C CNN
-F 3 "" H 7950 2000 50  0001 C CNN
-	1    7950 2000
+P 7450 1980
+F 0 "#PWR0111" H 7450 1830 50  0001 C CNN
+F 1 "+3.3V" H 7470 2160 50  0000 C CNN
+F 2 "" H 7450 1980 50  0001 C CNN
+F 3 "" H 7450 1980 50  0001 C CNN
+	1    7450 1980
 	1    0    0    -1  
 $EndComp
 $Comp
 L power:GND #PWR0112
 U 1 1 5FEF0CBA
-P 7950 2200
-F 0 "#PWR0112" H 7950 1950 50  0001 C CNN
-F 1 "GND" H 7990 2020 50  0000 C CNN
-F 2 "" H 7950 2200 50  0001 C CNN
-F 3 "" H 7950 2200 50  0001 C CNN
-	1    7950 2200
+P 7750 2080
+F 0 "#PWR0112" H 7750 1830 50  0001 C CNN
+F 1 "GND" H 7790 1900 50  0000 C CNN
+F 2 "" H 7750 2080 50  0001 C CNN
+F 3 "" H 7750 2080 50  0001 C CNN
+	1    7750 2080
 	1    0    0    -1  
 $EndComp
-NoConn ~ 7950 2100
-NoConn ~ 7450 2100
-NoConn ~ 7450 2200
 $Comp
 L Device:R R10
 U 1 1 5FEFF4E1
@@ -1682,4 +1668,17 @@ RSTN
 NoConn ~ 7350 3850
 NoConn ~ 7350 3750
 NoConn ~ -1250 3250
+$Comp
+L Connector:Conn_01x03_Female J3
+U 1 1 5FF5C419
+P 7950 1980
+F 0 "J3" H 8000 2030 50  0000 L CNN
+F 1 "Conn_01x03_Female" H 8000 1930 50  0000 L CNN
+F 2 "Connector_PinSocket_2.54mm:PinSocket_1x03_P2.54mm_Vertical" H 7950 1980 50  0001 C CNN
+F 3 "~" H 7950 1980 50  0001 C CNN
+	1    7950 1980
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	7450 1980 7750 1980
 $EndSCHEMATC

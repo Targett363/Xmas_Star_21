@@ -851,7 +851,7 @@ Text GLabel 5050 2500 2    50   Input ~ 0
 SPairXY1
 Text GLabel 5050 3300 2    50   Input ~ 0
 SPairYZ0
-Text GLabel 5060 4100 2    50   Input ~ 0
+Text GLabel 5050 4100 2    50   Input ~ 0
 SPairYZ1
 Text GLabel 5050 4900 2    50   Input ~ 0
 SPairZX0
@@ -919,7 +919,7 @@ UPDI
 Text Notes 5840 1740 0    50   ~ 0
 ATTINY1607 family of micros have a core located at:\nhttps://github.com/SpenceKonde/megaTinyCore\n
 $Comp
-L X19:TP4056X-UserLibray U4
+L XMAS_Star_21-rescue:TP4056X-UserLibray-X19 U4
 U 1 1 5FEBB245
 P 9600 1200
 F 0 "U4" H 9600 1705 50  0000 C CNN
@@ -941,7 +941,7 @@ F 3 "" H 9600 1650 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L Connector:USB_B_Micro J1
+L XMAS_Star_21-rescue:USB_B_Micro-Connector J1
 U 1 1 5FEBC775
 P 6150 1100
 F 0 "J1" H 6207 1567 50  0000 C CNN

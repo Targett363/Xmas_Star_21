@@ -1499,11 +1499,11 @@ Wire Wire Line
 Text GLabel 6300 5250 1    50   Input ~ 0
 Touch
 $Comp
-L Connector:Conn_01x01_Female J4
+L Connector:Conn_01x01_Female Touch_Pin1
 U 1 1 5FEF0BA5
 P 5900 5450
-F 0 "J4" H 5792 5225 50  0000 C CNN
-F 1 "Conn_01x01_Female" H 5792 5316 50  0000 C CNN
+F 0 "Touch_Pin1" H 5792 5225 50  0000 C CNN
+F 1 "Touch_Pin" H 5792 5316 50  0000 C CNN
 F 2 "Connector_PinHeader_1.00mm:PinHeader_1x01_P1.00mm_Vertical" H 5900 5450 50  0001 C CNN
 F 3 "~" H 5900 5450 50  0001 C CNN
 	1    5900 5450
@@ -1535,28 +1535,6 @@ F 2 "" H 6200 5750 50  0001 C CNN
 F 3 "" H 6200 5750 50  0001 C CNN
 	1    6200 5750
 	1    0    0    -1  
-$EndComp
-$Comp
-L Jumper:SolderJumper_3_Open JP1
-U 1 1 5FF3E4CD
-P 7300 5100
-F 0 "JP1" H 7300 5305 50  0000 C CNN
-F 1 "SolderJumper_3_Open" H 7300 5214 50  0000 C CNN
-F 2 "Jumper:SolderJumper-3_P2.0mm_Open_TrianglePad1.0x1.5mm_NumberLabels" H 7300 5100 50  0001 C CNN
-F 3 "~" H 7300 5100 50  0001 C CNN
-	1    7300 5100
-	1    0    0    -1  
-$EndComp
-$Comp
-L Jumper:SolderJumper_3_Open JP2
-U 1 1 5FF40516
-P 7300 5600
-F 0 "JP2" H 7300 5713 50  0000 C CNN
-F 1 "SolderJumper_3_Open" H 7300 5804 50  0000 C CNN
-F 2 "Jumper:SolderJumper-3_P2.0mm_Open_TrianglePad1.0x1.5mm_NumberLabels" H 7300 5600 50  0001 C CNN
-F 3 "~" H 7300 5600 50  0001 C CNN
-	1    7300 5600
-	-1   0    0    1   
 $EndComp
 Wire Wire Line
 	7300 5250 7100 5250
@@ -1681,4 +1659,26 @@ F 3 "~" H 7950 1980 50  0001 C CNN
 $EndComp
 Wire Wire Line
 	7450 1980 7750 1980
+$Comp
+L Jumper:SolderJumper_3_Bridged12 JP1
+U 1 1 5FF67DB9
+P 7300 5100
+F 0 "JP1" H 7290 5360 50  0000 C CNN
+F 1 "SolderJumper_3_Bridged12" H 7290 5260 50  0000 C CNN
+F 2 "Jumper:SolderJumper-3_P1.3mm_Bridged12_RoundedPad1.0x1.5mm_NumberLabels" H 7300 5100 50  0001 C CNN
+F 3 "~" H 7300 5100 50  0001 C CNN
+	1    7300 5100
+	-1   0    0    -1  
+$EndComp
+$Comp
+L Jumper:SolderJumper_3_Bridged12 JP2
+U 1 1 5FF6A9F7
+P 7300 5600
+F 0 "JP2" H 7310 5730 50  0000 C CNN
+F 1 "SolderJumper_3_Bridged12" H 7310 5830 50  0000 C CNN
+F 2 "Jumper:SolderJumper-3_P1.3mm_Bridged12_RoundedPad1.0x1.5mm_NumberLabels" H 7300 5600 50  0001 C CNN
+F 3 "~" H 7300 5600 50  0001 C CNN
+	1    7300 5600
+	1    0    0    1   
+$EndComp
 $EndSCHEMATC

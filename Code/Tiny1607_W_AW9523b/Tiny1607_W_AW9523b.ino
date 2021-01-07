@@ -55,10 +55,12 @@ bool interrupted = 0;
 void setup() {
   cli(); //disable interrupts
   pinMode(TouchPin,INPUT); //Set Touch pin to input mode
-  PORTB.PIN5CTRL|=0x02; //Set Touch pin to interrupt on rising edge input
+  PORTB.PIN5CTRL|=0x01; //Set Touch pin to interrupt on rising edge and falling edge input as TTP223 is set to toggle on touch
   sei(); //enable interrupts
+  
   pinMode(RSTN, OUTPUT); //Set the AW9523b reset to HIGH to prevent reset state before startup
   digitalWrite(RSTN, HIGH);
+  
   Wire.begin();
   
 

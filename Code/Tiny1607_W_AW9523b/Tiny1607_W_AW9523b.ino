@@ -9,35 +9,106 @@
  * i2c SDA - Arduino Pin 10, Port name PB1, Physical 15
  * AW RSTN - Arduino Pin 9,  Port name PB2, Physical 14
  * 
+ * AW9523b i2c address is set as high high so 0b1011011 plus the R/W bit on the end
+ * 
  */
 
  #include <Wire.h>
 
 //PIN Names
 const int TouchPin = 6;
-const int SCLPin = 11;
-const int SDAPin = 10;
 const int RSTN = 9;
+
+//AW9523 i2c names
+const byte AW9523b = 0x5b; //7bit i2c address for AW9523b with AD0 & AD1 pulled high
+const byte resetAddress = 0x7F; //Address on the AW9523b to soft reset
+const byte resetByte = 0x00; //Byte to send to the soft reset address to perform reset
+const byte ID = 0x10; //Address on the AW9523b to read the deviceID
+const byte P0Bank = 0x12; //Address for Port0 LED mode switch
+const byte P1Bank = 0x13; //Address for Port1 LED mode switch
+const byte BankLEDMode = 0b00000000; //Set ports to all 0 for LED mode
+const byte X = 0x24; //Port0 Pin0 address
+const byte Y = 0x25; //Port0 Pin1 address
+const byte Z = 0x26; //Port0 Pin2 address
+const byte XY0 = 0x27; //Port0 Pin3 address
+const byte XY1 = 0x28; //Port0 Pin4 address
+const byte YZ0 = 0x29; //Port0 Pin5 address
+const byte YZ1 = 0x2A; //Port0 Pin6 address
+const byte ZX0 = 0x2B; //Port0 Pin7 address
+const byte ZX1 = 0x20; //Port1 Pin0 address
+const byte SXY0 = 0x21; //Port0 Pin1 address
+const byte SXY1 = 0x22; //Port0 Pin2 address
+const byte SYZ0 = 0x23; //Port0 Pin3 address
+const byte SYZ1 = 0x2C; //Port0 Pin4 address
+const byte SZX0 = 0x2D; //Port0 Pin5 address
+const byte SZX1 = 0x2E; //Port0 Pin6 address
+const byte CENT = 0x2F; //Port0 Pin7 address
+/*****LED DIMMING VALUE BETWEEN 0x00 = 0/off AND 0xFF = 255 (255~~37mA)*************/
+
 
 //Global variables
 volatile byte prog = 0; //PROGRAM STATE SETTING
+const int maxProg = 7; //Value to loop the prog state back to 0 after x states
+bool interrupted = 0;
 
 
 void setup() {
+  cli(); //disable interrupts
   pinMode(TouchPin,INPUT); //Set Touch pin to input mode
   PORTB.PIN5CTRL|=0x02; //Set Touch pin to interrupt on rising edge input
+  sei(); //enable interrupts
+  pinMode(RSTN, OUTPUT); //Set the AW9523b reset to HIGH to prevent reset state before startup
+  digitalWrite(RSTN, HIGH);
+  Wire.begin();
+  
 
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
+  if (prog>maxProg){prog=0;} //setting the wraparound for the prog variable
+  
+  switch(prog){
+    case 0:
+      //animation0
+      break;
+    case 1:
+      //animation1
+      break;
+    case 2:
+      //animation2
+      break;
+    case 3:
+      //animation3
+      break;
+    case 4:
+      //animation4
+      break;
+    case 5:
+      //animation5
+      break;
+    case 6:
+      //animation6
+      break;
+    case 7:
+      //animation7
+      break;
+  }
+}
 
+
+void animation/*insert number here*/(){
+  while(!interrupted){ //stop doing this animation and return to the "loop" function when the interrupt triggers
+    //do the code here
+  }
 }
 
 ISR(PORTB_PORT_vect){
+  cli(); //disable interrupts
   byte flags=PORTB.INTFLAGS; //Read the Port B interrupt flags
-  PORTB.INTFLAGS=0x20; //Clear the interrupt flag for Touch pin so as to leave any other interrupt that triggered on Port B flagged for i2c
-  if (flags&0x20){ //if it was triggered by pin5
+  PORTB.INTFLAGS=0x20;       //Clear the interrupt flag for Touch pin so as to leave any other interrupt that triggered on Port B flagged for i2c
+  if (flags&0x20){           //if it was triggered by pin5
+    interrupted = 1;         //set program interrupted flag to end animation and re-enter the loop
     prog++;                  //then increment the program counter by 1
   }
+  sei(); //enable interrupts
 }

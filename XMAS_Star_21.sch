@@ -1541,17 +1541,6 @@ Wire Wire Line
 Wire Wire Line
 	7300 5450 7100 5450
 $Comp
-L power:+3.3V #PWR035
-U 1 1 5FF4CA2A
-P 7100 5100
-F 0 "#PWR035" H 7100 4950 50  0001 C CNN
-F 1 "+3.3V" H 7120 5280 50  0000 C CNN
-F 2 "" H 7100 5100 50  0001 C CNN
-F 3 "" H 7100 5100 50  0001 C CNN
-	1    7100 5100
-	1    0    0    -1  
-$EndComp
-$Comp
 L power:+3.3V #PWR040
 U 1 1 5FF4D0BA
 P 7500 5600
@@ -1668,7 +1657,7 @@ F 1 "SolderJumper_3_Bridged12" H 7290 5260 50  0000 C CNN
 F 2 "Jumper:SolderJumper-3_P1.3mm_Bridged12_RoundedPad1.0x1.5mm_NumberLabels" H 7300 5100 50  0001 C CNN
 F 3 "~" H 7300 5100 50  0001 C CNN
 	1    7300 5100
-	-1   0    0    -1  
+	1    0    0    -1  
 $EndComp
 $Comp
 L Jumper:SolderJumper_3_Bridged12 JP2
@@ -1727,6 +1716,17 @@ F 1 "+3.3V" H 8630 3770 50  0000 C CNN
 F 2 "" H 8610 3590 50  0001 C CNN
 F 3 "" H 8610 3590 50  0001 C CNN
 	1    8610 3590
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:+3.3V #PWR035
+U 1 1 5FF4CA2A
+P 7100 5100
+F 0 "#PWR035" H 7100 4950 50  0001 C CNN
+F 1 "+3.3V" H 7120 5280 50  0000 C CNN
+F 2 "" H 7100 5100 50  0001 C CNN
+F 3 "" H 7100 5100 50  0001 C CNN
+	1    7100 5100
 	1    0    0    -1  
 $EndComp
 $EndSCHEMATC

@@ -51,6 +51,10 @@ volatile byte prog = 0; //PROGRAM STATE SETTING
 const int maxProg = 7; //Value to loop the prog state back to 0 after x states
 bool interrupted = 0;
 
+//Animation arrays
+const byte AWRegister[16] = {X,Y,Z,XY0,XY1,YZ0,YZ1,ZX0,ZX1,SXY0,SXY1,SYZ0,SYZ1,SZX0,SZX1,CENT};
+const byte anim0[2][16] = {{255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255},{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}};
+// anim1, anim2, animX could all have different primary array size eg:anim1[8][16]
 
 void setup() {
   cli(); //disable interrupts
@@ -72,6 +76,7 @@ void loop() {
   switch(prog){
     case 0:
       //animation0
+      animation(anim0, 2, 100);
       break;
     case 1:
       //animation1
@@ -98,9 +103,32 @@ void loop() {
 }
 
 
-void animation/*insert number here*/(){
+//pass the address of the array, the size of the annimation and the delay between each frame of the animation!!
+void animation(byte anim[][16], int sizeanim, int stepDelay){
+  /***************USE THIS VERSION IF THE AW9523b TAKES REG-VAL-REG-VAL X16****************/
   while(!interrupted){ //stop doing this animation and return to the "loop" function when the interrupt triggers
     //do the code here
+    for (int l=0; l<(sizeanim); l++){
+      Wire.beginTransmission(AW9523b);
+      for (int i=0;i<16;i++){
+        Wire.write(AWRegister[i]);
+        Wire.write(anim[l][i]);
+      }
+      while(!(Wire.endTransmission()==0)){//just wait until the endTransmission completes
+      }
+      delay(stepDelay);
+    }
+    /***********Use this one if the AW9523b takes REG-VAL-END REG-VAL-END X16**************
+    for (int l=0; l<(sizeanim); l++){
+      Wire.beginTransmission(AW9523b);
+      for (int i=0;i<16;i++){
+        Wire.write(AWRegister[i]);
+        Wire.write(anim[l][i]);
+        while(!(Wire.endTransmission()==0)){//just wait until the endTransmission completes
+        }
+      }*/
+      delay(stepDelay);
+    }
   }
 }
 

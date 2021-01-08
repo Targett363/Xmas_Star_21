@@ -127,8 +127,7 @@ void animation(byte anim[][16], int sizeanim, int stepDelay){
         while(!(Wire.endTransmission()==0)){//just wait until the endTransmission completes
         }
       }*/
-      delay(stepDelay);
-    }
+    delay(stepDelay);
   }
 }
 

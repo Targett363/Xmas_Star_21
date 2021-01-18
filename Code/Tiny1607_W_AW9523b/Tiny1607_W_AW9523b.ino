@@ -103,10 +103,12 @@ void loop() {
   switch(prog){
     case 0:
       //animation0
-      animation(anim0, 2, 100, 0); //
+      animation(anim0, 2, 100, -1, 0); //(The Animation Array name, Number of frames in the Animation, ms Delay between frames, number of repeats [-1 is infinate], forward or reverse direction of animation [0==Forward 1=Reverse])
       break;
     case 1:
       //animation1
+      animation(anim1, 17, 100, 1, 0); //Fade Animation forwards
+      animation(anim1, 17, 100, 1, 1); //Fade Animation reverse
       break;
     case 2:
       //animation2
@@ -131,30 +133,36 @@ void loop() {
 
 
 //pass the address of the array, the size of the annimation and the delay between each frame of the animation!!
-void animation(byte anim[][16], int sizeanim, int stepDelay, bool forwardOrReverse){
+void animation(byte anim[][16], int sizeanim, int stepDelay, int repeats, bool forwardOrReverse){
   /***************USE THIS VERSION IF THE AW9523b TAKES REG-VAL-REG-VAL X16****************/
   while(!interrupted){ //stop doing this animation and return to the "loop" function when the interrupt triggers
     //do the code here
-    if (forwardOrReverse==0){
-      for (int l=0; l<(sizeanim); l++){
-        Wire.beginTransmission(AW9523b);
-        for (int i=0;i<16;i++){
-          Wire.write(AWRegister[i]);
-          Wire.write(anim[l][i]);
+    int r=repeats;
+    while(r != 0){
+      if (forwardOrReverse==0){
+        for (int l=0; l<(sizeanim); l++){
+          Wire.beginTransmission(AW9523b);
+          for (int i=0;i<16;i++){
+            Wire.write(AWRegister[i]);
+            Wire.write(anim[l][i]);
+          }
+          while(!(Wire.endTransmission()==0)){}//just wait until the endTransmission completes
+          delay(stepDelay);
         }
-        while(!(Wire.endTransmission()==0)){}//just wait until the endTransmission completes
-        delay(stepDelay);
       }
-    }
-    else{
-      for(int l=(sizeanim-1); l>=0; l--){
-        Wire.beginTransmission(AW9523b);
-        for (int i=0;i<16;i++){
-          Wire.write(AWRegister[i]);
-          Wire.write(anim[l][i]);
+      else{
+        for(int l=(sizeanim-1); l>=0; l--){
+          Wire.beginTransmission(AW9523b);
+          for (int i=0;i<16;i++){
+            Wire.write(AWRegister[i]);
+            Wire.write(anim[l][i]);
+          }
+          while(!(Wire.endTransmission()==0)){}//just wait until the endTransmission completes
+          delay(stepDelay);
         }
-        while(!(Wire.endTransmission()==0)){}//just wait until the endTransmission completes
-        delay(stepDelay);
+      }
+      if(r>-1){
+        r--;
       }
     }
   interrupted=0; //resetting the interrupt flag on annimation exit

@@ -53,7 +53,33 @@ bool interrupted = 0;
 
 //Animation arrays
 const byte AWRegister[16] = {X,Y,Z,XY0,XY1,YZ0,YZ1,ZX0,ZX1,SXY0,SXY1,SYZ0,SYZ1,SZX0,SZX1,CENT};
-const byte anim0[2][16] = {{255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255},{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}};
+
+const byte anim0[2][16] = { /*********BLINK***********/
+  {255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255}, //One frame of all on 100% 
+  {  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0}  //then one frame of all OFF
+};
+
+const byte anim1[17][16] = { /************FADE DOWN*********/
+  {255,255,255,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,255},/*One frame of X,Y,Z & Cent 100%*/
+  {239,239,239,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,239},/*Same but 6.3% dimmer*/
+  {223,223,223,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,223},/*Same but 6.3% dimmer*/
+  {207,207,207,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,207},
+  {191,191,191,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,191},
+  {175,175,175,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,175},
+  {159,159,159,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,159},
+  {143,143,143,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,143},
+  {127,127,127,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,127},
+  {111,111,111,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,111},
+  { 95, 95, 95,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, 95},
+  { 79, 79, 79,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, 79},
+  { 63, 63, 63,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, 63},
+  { 47, 47, 47,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, 47},
+  { 31, 31, 31,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, 31},
+  { 15, 15, 15,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, 15},
+  {  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0} /*One frame of All OFF*/
+};
+
+
 // anim1, anim2, animX could all have different primary array size eg:anim1[8][16]
 
 void setup() {
@@ -73,10 +99,11 @@ void setup() {
 void loop() {
   if (prog>maxProg){prog=0;} //setting the wraparound for the prog variable
   
+  
   switch(prog){
     case 0:
       //animation0
-      animation(anim0, 2, 100);
+      animation(anim0, 2, 100, 0); //
       break;
     case 1:
       //animation1
@@ -104,20 +131,35 @@ void loop() {
 
 
 //pass the address of the array, the size of the annimation and the delay between each frame of the animation!!
-void animation(byte anim[][16], int sizeanim, int stepDelay){
+void animation(byte anim[][16], int sizeanim, int stepDelay, bool forwardOrReverse){
   /***************USE THIS VERSION IF THE AW9523b TAKES REG-VAL-REG-VAL X16****************/
   while(!interrupted){ //stop doing this animation and return to the "loop" function when the interrupt triggers
     //do the code here
-    for (int l=0; l<(sizeanim); l++){
-      Wire.beginTransmission(AW9523b);
-      for (int i=0;i<16;i++){
-        Wire.write(AWRegister[i]);
-        Wire.write(anim[l][i]);
+    if (forwardOrReverse==0){
+      for (int l=0; l<(sizeanim); l++){
+        Wire.beginTransmission(AW9523b);
+        for (int i=0;i<16;i++){
+          Wire.write(AWRegister[i]);
+          Wire.write(anim[l][i]);
+        }
+        while(!(Wire.endTransmission()==0)){}//just wait until the endTransmission completes
+        delay(stepDelay);
       }
-      while(!(Wire.endTransmission()==0)){//just wait until the endTransmission completes
-      }
-      delay(stepDelay);
     }
+    else{
+      for(int l=(sizeanim-1); l>=0; l--){
+        Wire.beginTransmission(AW9523b);
+        for (int i=0;i<16;i++){
+          Wire.write(AWRegister[i]);
+          Wire.write(anim[l][i]);
+        }
+        while(!(Wire.endTransmission()==0)){}//just wait until the endTransmission completes
+        delay(stepDelay);
+      }
+    }
+  interrupted=0; //resetting the interrupt flag on annimation exit
+  }
+    
     /***********Use this one if the AW9523b takes REG-VAL-END REG-VAL-END X16**************
     for (int l=0; l<(sizeanim); l++){
       Wire.beginTransmission(AW9523b);
@@ -126,9 +168,10 @@ void animation(byte anim[][16], int sizeanim, int stepDelay){
         Wire.write(anim[l][i]);
         while(!(Wire.endTransmission()==0)){//just wait until the endTransmission completes
         }
-      }*/
+      }
     delay(stepDelay);
-  }
+  }*/
+  
 }
 
 ISR(PORTB_PORT_vect){

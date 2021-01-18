@@ -132,7 +132,7 @@ void loop() {
 }
 
 
-//pass the address of the array, the size of the annimation and the delay between each frame of the animation!!
+//pass the address of the array, the size of the annimation and the delay between each frame of the animation, nimber of times to repeat the animation, forward or reverse play!!
 void animation(byte anim[][16], int sizeanim, int stepDelay, int repeats, bool forwardOrReverse){
   /***************USE THIS VERSION IF THE AW9523b TAKES REG-VAL-REG-VAL X16****************/
   while(!interrupted){ //stop doing this animation and return to the "loop" function when the interrupt triggers

@@ -18,6 +18,7 @@
 //PIN Names
 const int TouchPin = 6;
 const int RSTN = 9;
+const int LED = 2;
 
 //AW9523 i2c names
 const byte AW9523b = 0x5b; //7bit i2c address for AW9523b with AD0 & AD1 pulled high
@@ -49,7 +50,7 @@ const byte CENT = 0x2F; //Port0 Pin7 address
 //Global variables
 volatile byte prog = 0; //PROGRAM STATE SETTING
 const int maxProg = 7; //Value to loop the prog state back to 0 after x states
-bool interrupted = 0;
+bool interrupted = LOW;
 
 //Animation arrays
 const byte AWRegister[16] = {X,Y,Z,XY0,XY1,YZ0,YZ1,ZX0,ZX1,SXY0,SXY1,SYZ0,SYZ1,SZX0,SZX1,CENT};
@@ -118,18 +119,29 @@ void setup() {
   digitalWrite(RSTN, HIGH);
   
   Wire.begin();
-  
+
+  //feedback led for debug
+  pinMode(LED, OUTPUT);
+  digitalWrite(LED, LOW);
 
 }
 
 void loop() {
   if (prog>maxProg){prog=0;} //setting the wraparound for the prog variable
-  
+
+  //feedback led for debug
+  int feed=prog+1;
+  for (int f=feed; f>0; f--){
+    digitalWrite(LED, HIGH);
+    delay(250);
+    digitalWrite(LED, LOW);
+    delay(250);
+  }
   
   switch(prog){
     case 0:
       //animation0
-      animation(anim0, 2, 100, -1, 0); //(The Animation Array name, Number of frames in the Animation, ms Delay between frames, number of repeats [-1 is infinate], forward or reverse direction of animation [0==Forward 1=Reverse])
+      animation(anim0, 2, 500  , -1, 0); //(The Animation Array name, Number of frames in the Animation, ms Delay between frames, number of repeats [-1 is infinate], forward or reverse direction of animation [0==Forward 1=Reverse])
       break;
     case 1:
       //animation1
@@ -163,10 +175,10 @@ void loop() {
 //pass the address of the array, the size of the annimation and the delay between each frame of the animation, nimber of times to repeat the animation, forward or reverse play!!
 void animation(byte anim[][16], int sizeanim, int stepDelay, int repeats, bool forwardOrReverse){
   /***************USE THIS VERSION IF THE AW9523b TAKES REG-VAL-REG-VAL X16****************/
-  while(!interrupted){ //stop doing this animation and return to the "loop" function when the interrupt triggers
+  while(interrupted==LOW){ //stop doing this animation and return to the "loop" function when the interrupt triggers
     //do the code here
-    int r=repeats;
-    while(r != 0){
+    //int r=repeats;
+    while(repeats != 0){
       if (forwardOrReverse==0){
         for (int l=0; l<(sizeanim); l++){
           Wire.beginTransmission(AW9523b);
@@ -189,13 +201,13 @@ void animation(byte anim[][16], int sizeanim, int stepDelay, int repeats, bool f
           delay(stepDelay);
         }
       }
-      if(r>-1){
-        r--;
+      if(repeats>-1){
+        repeats--;
       }
     }
-  interrupted=0; //resetting the interrupt flag on annimation exit
+  
   }
-    
+  interrupted=LOW; //resetting the interrupt flag on annimation exit
     /***********Use this one if the AW9523b takes REG-VAL-END REG-VAL-END X16**************
     for (int l=0; l<(sizeanim); l++){
       Wire.beginTransmission(AW9523b);
@@ -215,7 +227,7 @@ ISR(PORTB_PORT_vect){
   byte flags=PORTB.INTFLAGS; //Read the Port B interrupt flags
   PORTB.INTFLAGS=0x20;       //Clear the interrupt flag for Touch pin so as to leave any other interrupt that triggered on Port B flagged for i2c
   if (flags&0x20){           //if it was triggered by pin5
-    interrupted = 1;         //set program interrupted flag to end animation and re-enter the loop
+    interrupted = HIGH;      //set program interrupted flag to end animation and re-enter the loop
     prog++;                  //then increment the program counter by 1
   }
   sei(); //enable interrupts

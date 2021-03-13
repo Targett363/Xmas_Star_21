@@ -49,8 +49,8 @@ const byte CENT = 0x2F; //Port0 Pin7 address
 
 //Global variables
 volatile byte prog = 0; //PROGRAM STATE SETTING
-const int maxProg = 7; //Value to loop the prog state back to 0 after x states
-bool interrupted = LOW;
+const int maxProg = 4; //Value to loop the prog state back to 0 after x states
+volatile bool interrupted = LOW;
 
 //Animation arrays
 const byte AWRegister[16] = {X,Y,Z,XY0,XY1,YZ0,YZ1,ZX0,ZX1,SXY0,SXY1,SYZ0,SYZ1,SZX0,SZX1,CENT};
@@ -86,7 +86,7 @@ const byte anim1[17][16] = { /************TIPS FADE DOWN*********/
   {  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0} /*One frame of All OFF*/
 };
 
-const byte anim2[17][16] = { /************TIPS FADE DOWN*********/
+const byte anim2[17][16] = { /************ALL FADE DOWN*********/
   {255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255},/*One frame of ALL 100%*/
   {239,239,239,239,239,239,239,239,239,239,239,239,239,239,239,239},/*Same but 6.3% dimmer*/
   {223,223,223,223,223,223,223,223,223,223,223,223,223,223,223,223},/*Same but 6.3% dimmer*/
@@ -106,6 +106,26 @@ const byte anim2[17][16] = { /************TIPS FADE DOWN*********/
   {  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0} /*One frame of All OFF*/
 };
 
+const byte anim3[3][16] = {
+  {  255,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
+  {  0,  255,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
+  {  0,  0,  255,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0}
+};
+
+//const byte anim0[2][16] = { /*********BLINK***********/
+//  {  255,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0}, //One frame of all on 100% 
+//  {  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0}  //then one frame of all OFF
+//};
+//
+//const byte anim1[2][16] = { /*********BLINK***********/
+//  {  0,  255,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0}, //One frame of all on 100% 
+//  {  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0}  //then one frame of all OFF
+//};
+//
+//const byte anim2[2][16] = { /*********BLINK***********/
+//  {  0,  0,  255,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0}, //One frame of all on 100% 
+//  {  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0}  //then one frame of all OFF
+//};
 
 // anim1, anim2, animX could all have different primary array size eg:anim1[8][16]
 
@@ -128,33 +148,41 @@ void setup() {
 
 void loop() {
   if (prog>maxProg){prog=0;} //setting the wraparound for the prog variable
-
+  int lastprog;
+  if (lastprog != prog){
+    lastprog = prog;
+    sendblank();
+  }
+/*
   //feedback led for debug
   int feed=prog+1;
-  for (int f=feed; f>0; f--){
+  for (feed; feed>0; feed--){
     digitalWrite(LED, HIGH);
     delay(250);
     digitalWrite(LED, LOW);
-    delay(250);
-  }
+    delay(1000);
+  }*/
   
   switch(prog){
     case 0:
       //animation0
-      animation(anim0, 2, 500  , -1, 0); //(The Animation Array name, Number of frames in the Animation, ms Delay between frames, number of repeats [-1 is infinate], forward or reverse direction of animation [0==Forward 1=Reverse])
+      animation(anim0, 2, 250  , 1, 0); //(The Animation Array name, Number of frames in the Animation, ms Delay between frames, number of repeats [-1 is infinate], forward or reverse direction of animation [0==Forward 1=Reverse])
       break;
     case 1:
       //animation1
-      animation(anim1, 17, 100, 1, 0); //Fade Animation forwards
-      animation(anim1, 17, 100, 1, 1); //Fade Animation reverse
+      //animation(anim1, 17, 500, 1, 0); //Fade Animation forwards
+      //animation(anim1, 17, 500, 1, 1); //Fade Animation reverse
+      animation(anim0, 2, 1000, 1, 0);
       break;
     case 2:
       //animation2
-      animation(anim2, 17, 100, 1, 0); //Fade Animation forwards
-      animation(anim2, 17, 100, 1, 1); //Fade Animation reverse
+      //animation(anim2, 17, 500, 1, 0); //Fade Animation forwards
+      //animation(anim2, 17, 500, 1, 1); //Fade Animation reverse
+      animation(anim0, 2, 500, 1, 0);
       break;
     case 3:
       //animation3
+      animation(anim0, 2, 2000, 1, 0);
       break;
     case 4:
       //animation4
@@ -171,16 +199,22 @@ void loop() {
   }
 }
 
+void sendblank(){
+  Wire.beginTransmission(AW9523b);
+  Wire.write(resetAddress);
+  Wire.write(resetByte);
+  while(!(Wire.endTransmission()==0)){}
+}
 
 //pass the address of the array, the size of the annimation and the delay between each frame of the animation, nimber of times to repeat the animation, forward or reverse play!!
 void animation(byte anim[][16], int sizeanim, int stepDelay, int repeats, bool forwardOrReverse){
   /***************USE THIS VERSION IF THE AW9523b TAKES REG-VAL-REG-VAL X16****************/
-  while(interrupted==LOW){ //stop doing this animation and return to the "loop" function when the interrupt triggers
+  //while(interrupted==LOW){ //stop doing this animation and return to the "loop" function when the interrupt triggers
     //do the code here
     //int r=repeats;
     while(repeats != 0){
       if (forwardOrReverse==0){
-        for (int l=0; l<(sizeanim); l++){
+        for (int l=0; l<=(sizeanim-1); l++){
           Wire.beginTransmission(AW9523b);
           for (int i=0;i<16;i++){
             Wire.write(AWRegister[i]);
@@ -204,7 +238,7 @@ void animation(byte anim[][16], int sizeanim, int stepDelay, int repeats, bool f
       if(repeats>-1){
         repeats--;
       }
-    }
+    //}
   
   }
   interrupted=LOW; //resetting the interrupt flag on annimation exit
